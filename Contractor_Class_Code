@@ -1,0 +1,87 @@
+//Javari Chambers
+
+/*
+Below i created the base 'Contractor' class 
+with 3 attributes.
+
+*/
+
+
+using System;
+
+public class Contractor
+{
+    // Private attributes 
+    private string name;
+    private int contractorNumber;
+    private string startDate;
+
+    // Default constructor
+    public Contractor()
+    {
+        //default values
+        name = "Unknown"; 
+        contractorNumber = 0; 
+        startDate = "Not Set";
+    }
+
+    //constructor - Lets you set values when creating new object
+    //
+    public Contractor(string n, int num, string date)
+    {
+        name = n;  //sets name from user input
+        contractorNumber = num; //sets number from user input
+        startDate = date; //sets start date from user input
+    }
+
+    // Getter for name
+    public string GetName()
+    {
+        return name;
+    }
+
+    // Setter for name (changes the names)
+    public void SetName(string n)
+    {
+        name = n;
+    }
+
+    // Getter for contractor number
+    public int GetNumber()
+    {
+        return contractorNumber;
+    }
+
+    // Setter for contractor number
+    public void SetNumber(int num)
+    {
+        contractorNumber = num;
+    }
+
+    // Getter for start date
+    public string GetStartDate()
+    {
+        return startDate;
+    }
+
+    // Setter for start date
+    public void SetStartDate(string date)
+    {
+        startDate = date;
+    }
+
+    // Display contractor info 
+    public void ShowInfo()
+    {
+        Console.WriteLine("Contractor Name: " + name);
+        Console.WriteLine("Contractor Number: " + contractorNumber);
+        Console.WriteLine("Start Date: " + startDate);
+    }
+} // end of contractor class
+
+/*  
+    Next Steps
+B- Create the Subcontractor class that inherits from the code above.
+C- Create the calcualation method.
+D- Write main() method tying everything together.
+B- 
