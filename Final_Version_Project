@@ -1,0 +1,208 @@
+// Final version of project.
+
+
+using System;
+using System.Collections.Generic;
+
+// ================= Contractor Class =================
+public class Contractor
+{
+    // Private attributes 
+    private string name;
+    private int contractorNumber;
+    private string startDate;
+
+    // Default constructor
+    public Contractor()
+    {
+        name = "Unknown";
+        contractorNumber = 0;
+        startDate = "Not Set";
+    }
+
+    // Constructor with parameters
+    public Contractor(string n, int num, string date)
+    {
+        name = n;
+        contractorNumber = num;
+        startDate = date;
+    }
+
+    // Getter and Setter for Name
+    public string GetName() { return name; }
+    public void SetName(string n) { name = n; }
+
+    // Getter and Setter for Contractor Number
+    public int GetNumber() { return contractorNumber; }
+    public void SetNumber(int num) { contractorNumber = num; }
+
+    // Getter and Setter for Start Date
+    public string GetStartDate() { return startDate; }
+    public void SetStartDate(string date) { startDate = date; }
+
+    // Display contractor info
+    public void ShowInfo()
+    {
+        Console.WriteLine("Contractor Name: " + name);
+        Console.WriteLine("Contractor Number: " + contractorNumber);
+        Console.WriteLine("Start Date: " + startDate);
+    }
+}
+
+// ================= Subcontractor Class =================
+public class Subcontractor : Contractor
+{
+    private int shift;              // 1 = Day, 2 = Night
+    private double hourlyPayRate;
+
+    public int Shift
+    {
+        get { return shift; }
+        set { shift = value; }
+    }
+
+    public double HourlyPayRate
+    {
+        get { return hourlyPayRate; }
+        set { hourlyPayRate = value; }
+    }
+
+    // Constructor
+    public Subcontractor(string name, int number, string startDate, int shift, double hourlyPayRate)
+        : base(name, number, startDate)
+    {
+        this.shift = shift;
+        this.hourlyPayRate = hourlyPayRate;
+    }
+
+    // Pay calculation with 3% night shift differential
+    public double CalculatePay(double hoursWorked)
+    {
+        double pay = hoursWorked * hourlyPayRate;
+        if (shift == 2) // Night shift
+        {
+            pay *= 1.03;
+        }
+        return pay;
+    }
+
+    // Display subcontractor info
+    public void ShowSubcontractor()
+    {
+        base.ShowInfo();
+        Console.WriteLine("Shift: " + shift);
+        Console.WriteLine("Hourly Rate: $" + hourlyPayRate);
+    }
+}
+
+// ================= Main Program =================
+public class Program
+{
+    public static void Main()
+    {
+        var subs = new List<Subcontractor>();
+        Console.WriteLine("=== Subcontractor Manager ===");
+        Console.WriteLine("Shift: 1 = Day, 2 = Night (3% differential applies to Night)");
+
+        while (true)
+        {
+            Console.WriteLine("\nMenu:");
+            Console.WriteLine("1) Add Subcontractor");
+            Console.WriteLine("2) List Subcontractors");
+            Console.WriteLine("3) Compute Pay for a Subcontractor");
+            Console.WriteLine("4) Exit");
+            Console.Write("Choose an option: ");
+            string option = Console.ReadLine();
+
+            if (option == "1")
+            {
+                try
+                {
+                    Console.Write("Name: ");
+                    string name = Console.ReadLine();
+
+                    Console.Write("Contractor Number (int): ");
+                    if (!int.TryParse(Console.ReadLine(), out int number))
+                    {
+                        Console.WriteLine("Invalid number. Try again.");
+                        continue;
+                    }
+
+                    Console.Write("Start Date (string, e.g., 2025-10-01): ");
+                    string startDate = Console.ReadLine();
+
+                    Console.Write("Shift (1 = Day, 2 = Night): ");
+                    if (!int.TryParse(Console.ReadLine(), out int shift) || (shift != 1 && shift != 2))
+                    {
+                        Console.WriteLine("Shift must be 1 or 2.");
+                        continue;
+                    }
+
+                    Console.Write("Hourly Pay Rate (double): ");
+                    if (!double.TryParse(Console.ReadLine(), out double rate) || rate < 0)
+                    {
+                        Console.WriteLine("Hourly rate must be non-negative.");
+                        continue;
+                    }
+
+                    var sc = new Subcontractor(name, number, startDate, shift, rate);
+                    subs.Add(sc);
+                    Console.WriteLine("Subcontractor added.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error adding subcontractor: {ex.Message}");
+                }
+            }
+            else if (option == "2")
+            {
+                if (subs.Count == 0)
+                {
+                    Console.WriteLine("No subcontractors yet.");
+                }
+                else
+                {
+                    for (int i = 0; i < subs.Count; i++)
+                    {
+                        Console.WriteLine($"\n[{i}]");
+                        subs[i].ShowSubcontractor();
+                    }
+                }
+            }
+            else if (option == "3")
+            {
+                if (subs.Count == 0)
+                {
+                    Console.WriteLine("No subcontractors to compute pay for.");
+                    continue;
+                }
+
+                Console.Write("Enter index of subcontractor: ");
+                if (!int.TryParse(Console.ReadLine(), out int idx) || idx < 0 || idx >= subs.Count)
+                {
+                    Console.WriteLine("Invalid index.");
+                    continue;
+                }
+
+                Console.Write("Hours worked: ");
+                if (!double.TryParse(Console.ReadLine(), out double hours) || hours < 0)
+                {
+                    Console.WriteLine("Hours must be non-negative.");
+                    continue;
+                }
+
+                double pay = subs[idx].CalculatePay(hours);
+                Console.WriteLine($"Computed Pay: {pay:C}");
+            }
+            else if (option == "4")
+            {
+                Console.WriteLine("Exiting. Bye!");
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Unknown option. Please choose 1–4.");
+            }
+        }
+    }
+}
